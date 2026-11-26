@@ -149,6 +149,38 @@ SOURCE_SERVICE_RESPONSE = "service_response"
 #: expressed at all, and a brand shaped that way discovered zero rooms.
 SHAPE_FLAT_LIST = "flat_list"
 SHAPE_PER_MAP_MAPPING = "per_map_mapping"
+#: ``{room_name: room_id | [room_id, ...]}`` for ONE map (the Ecovacs vacuum ``rooms``
+#: attribute). There is no per-room dict to read, so the name IS the key; a name that
+#: repeats on the device arrives as a list of ids.
+SHAPE_NAME_ID_MAPPING = "name_id_mapping"
+
+
+def normalize_room_attribute(raw: Any, shape: str | None) -> Any:
+    """Turn a declared-shape room attribute into the flat list-of-dicts discovery reads.
+
+    Identity for every shape except ``name_id_mapping``, so the existing brands are
+    untouched. For that shape the ``{name: id}`` mapping becomes ``[{"id", "name"}]``.
+    A device that slugifies names (Ecovacs publishes ``living_room``) is shown as
+    ``Living Room``; ``slugify_room_name`` maps it back to the same identity slug. A
+    name carrying several ids is numbered so each id stays addressable. Anything that
+    is not a mapping returns None, matching the "missing or invalid" path.
+    """
+    if shape != SHAPE_NAME_ID_MAPPING:
+        return raw
+    if not isinstance(raw, dict):
+        return None
+    rows: list[dict[str, Any]] = []
+    for name, ids in raw.items():
+        id_list = list(ids) if isinstance(ids, (list, tuple)) else [ids]
+        label = str(name).replace("_", " ").strip().title()
+        for index, room_id in enumerate(id_list, start=1):
+            rows.append(
+                {
+                    "id": room_id,
+                    "name": label if len(id_list) == 1 else f"{label} {index}",
+                }
+            )
+    return rows
 
 
 def select_segments_for_map(

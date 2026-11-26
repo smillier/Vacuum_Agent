@@ -344,6 +344,7 @@ class OnboardingManager:
         )
         from ..rooms.source_refresh import (
             SHAPE_PER_MAP_MAPPING,
+            normalize_room_attribute,
             select_segments_for_map,
         )
 
@@ -416,7 +417,9 @@ class OnboardingManager:
             if active_map_id is not None and str(active_map_id) != str(map_id):
                 return False
 
-            segments = raw
+            segments = normalize_room_attribute(
+                raw, discovery.get("room_list_shape")
+            )
             if not isinstance(segments, list):
                 return False
 

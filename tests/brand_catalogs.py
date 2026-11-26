@@ -49,6 +49,14 @@ from custom_components.eufy_vacuum.adapters.dreame.vocabulary import (
     ROOM_PROFILES as _DR_BUILTINS,
 )
 
+from custom_components.eufy_vacuum.adapters.ecovacs.vocabulary import (
+    CUSTOM_ROOM_PROFILE as _EC_TEMPLATE,
+    FLOOR_TYPE_FAN_DEFAULTS as _EC_FAN_DEFAULTS,
+    FLOOR_TYPE_WATER_DEFAULTS as _EC_WATER_DEFAULTS,
+    LEGACY_ALIASES as _EC_ALIASES,
+    ROOM_PROFILES as _EC_BUILTINS,
+)
+
 EUFY_BLOCK: dict[str, Any] = {
     "default_profile": "vacuum_quick",
     "builtins": _EUFY_BUILTINS,
@@ -195,6 +203,18 @@ DREAME_BLOCK: dict[str, Any] = {
     "floor_type_fan_defaults": _DR_FAN_DEFAULTS,
 }
 
+# The fourth brand. Like Dreame it has NO "off" water rung (the mop is a work-mode
+# decision, not a zero water level), so floor_type_water_defaults is declared EMPTY.
+ECOVACS_BLOCK: dict[str, Any] = {
+    "default_profile": "vacuum_quick",
+    "builtins": _EC_BUILTINS,
+    "custom_template": _EC_TEMPLATE,
+    "normalize_defaults": _EC_TEMPLATE,
+    "legacy_aliases": _EC_ALIASES,
+    "floor_type_water_defaults": _EC_WATER_DEFAULTS,
+    "floor_type_fan_defaults": _EC_FAN_DEFAULTS,
+}
+
 # REPLICA RN7WK2CX -- primary: adapters/brands.py::BRAND_REGISTRARS. THIS ONE is
 # the vocabulary-catalog table. A brand in the registry and not here is not a
 # failure, it is silence: every test taking the `brand` fixture simply never runs
@@ -206,5 +226,6 @@ BRAND_BLOCKS: dict[str, dict[str, Any]] = {
     "eufy": EUFY_BLOCK,
     "roborock": ROBOROCK_BLOCK,
     "dreame": DREAME_BLOCK,
+    "ecovacs": ECOVACS_BLOCK,
     "synthetic": SYNTHETIC_BLOCK,
 }

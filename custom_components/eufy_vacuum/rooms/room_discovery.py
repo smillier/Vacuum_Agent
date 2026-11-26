@@ -76,6 +76,7 @@ from .source_refresh import (
     SHAPE_PER_MAP_MAPPING,
     SOURCE_SERVICE_RESPONSE,
     get_cached_room_source,
+    normalize_room_attribute,
     select_segments_for_map,
 )
 from ..adapters.registry import get_adapter_config
@@ -460,6 +461,7 @@ def _implicit_attribute_map_id(
     # FLAT-LIST shape (Eufy scalar/Tuya): the declared implicit id itself is the anchor.
     # Require at least one dict row — a non-empty list of non-dicts is not a usable
     # room list and must not anchor a phantom map (matches discover_rooms' filter).
+    rooms = normalize_room_attribute(rooms, discovery.get("room_list_shape"))
     if isinstance(rooms, list) and any(isinstance(r, dict) for r in rooms):
         return str(implicit)
     return None
@@ -592,7 +594,9 @@ def discover_rooms_for_vacuum(
                 )
                 return []
         else:
-            segments = raw
+            segments = normalize_room_attribute(
+                raw, discovery.get("room_list_shape")
+            )
             if not isinstance(segments, list):
                 _LOGGER.debug(
                     "Room list attribute '%s' missing or invalid for %s",

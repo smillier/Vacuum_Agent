@@ -1128,7 +1128,7 @@ ADAPTER_CONFIG_SCHEMA: dict[str, dict] = {
             "room_list_shape": {
                 "type": "str",
                 "required": False,
-                "values": ["flat_list", "per_map_mapping"],
+                "values": ["flat_list", "per_map_mapping", "name_id_mapping"],
                 "description": (
                     "SHAPE of the room list, declared independently of the SOURCE it "
                     "arrives through. 'flat_list' (default): the rooms for one map, as "
@@ -1142,7 +1142,12 @@ ADAPTER_CONFIG_SCHEMA: dict[str, dict] = {
                     "read as 'missing or invalid' and discovered ZERO rooms. Declaring "
                     "the shape is the extension point; branching on a brand name is "
                     "not. Ignored for source='service_response', whose flattener "
-                    "always produces per-map keying."
+                    "always produces per-map keying. 'name_id_mapping': the active "
+                    "map's rooms as a {room_name: id | [ids]} mapping (Ecovacs' vacuum "
+                    "`rooms` attribute, names slugified by the device integration); "
+                    "flattened to [{id, name}] by "
+                    "rooms/source_refresh.py::normalize_room_attribute, with "
+                    "room_id_key='id' and room_name_key='name'."
                 ),
             },
             "maps_service": {

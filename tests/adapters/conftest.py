@@ -91,6 +91,31 @@ def _build_dreame(hass) -> dict[str, Any]:
     return get_adapter_config("vacuum.robin")
 
 
+def _build_ecovacs(hass) -> dict[str, Any]:
+    """Build + register the real Ecovacs adapter config for one vacuum.
+
+    No device-registry entry is set up, so the model resolves to the catalog
+    DEFAULT_PROFILE and live entity presence is the gate -- the same position the adapter
+    takes for every Deebot. The vacuum state mirrors what the core ``ecovacs`` integration
+    publishes (HA VacuumActivity state + a ``rooms`` {slug: id} attribute + fan speed list).
+    """
+    from custom_components.eufy_vacuum.adapters.ecovacs.adapter import (
+        register_ecovacs_adapter_for_vacuum,
+    )
+
+    hass.states.async_set(
+        "vacuum.deebot",
+        "docked",
+        {
+            "fan_speed": "normal",
+            "fan_speed_list": ["quiet", "normal", "max", "max_plus"],
+            "rooms": {"living_room": 1, "kitchen": 2},
+        },
+    )
+    register_ecovacs_adapter_for_vacuum(hass, "vacuum.deebot")
+    return get_adapter_config("vacuum.deebot")
+
+
 # Registry of every known adapter. KEY = brand name, VALUE = builder(hass)->config.
 # Adding a brand here wires it into every contract test in this suite.
 #
@@ -104,6 +129,7 @@ ADAPTER_BUILDERS: dict[str, Callable[[Any], dict[str, Any]]] = {
     "eufy": _build_eufy,
     "roborock": _build_roborock,
     "dreame": _build_dreame,
+    "ecovacs": _build_ecovacs,
 }
 
 

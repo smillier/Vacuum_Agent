@@ -11,13 +11,13 @@
 [![Validate][validate-badge]][validate-url]
 [![License: MIT][license-badge]][license-url]
 
-A custom Home Assistant integration that adds a whole control-and-intelligence layer on top of your robot vacuum — **room-level cleaning, a live map you can actually drive from, a learning/ETA system, saved zones, battery-health tracking, a themeable dashboard, eighteen languages, and automation events** — for **Eufy**, **Roborock** *and* **Dreame**. It uses an adapter pattern, so more brands can follow.
+A custom Home Assistant integration that adds a whole control-and-intelligence layer on top of your robot vacuum — **room-level cleaning, a live map you can actually drive from, a learning/ETA system, saved zones, battery-health tracking, a themeable dashboard, eighteen languages, and automation events** — for **Eufy**, **Roborock**, **Dreame** *and* **Ecovacs Deebot**. It uses an adapter pattern, so more brands can follow.
 
 ![Vacuum Agent — a real home's map with every room painted in its own floor material, robot mid-clean](docs/screenshots/floor-texture-map.png)
 
 *Every room painted with its real floor material — wood, marble, granite, tile, carpet — rendered live over your robot's actual map.*
 
-It doesn't replace your vacuum integration, it builds on it: for **Eufy** that's [eufy-clean by jeppesens](https://github.com/jeppesens/eufy-clean); for **Roborock**, Home Assistant's built-in Roborock integration; for **Dreame**, [dreame-vacuum by Tasshack](https://github.com/Tasshack/dreame-vacuum). Vacuum Agent consumes whatever they already expose and adds everything the stock integrations don't.
+It doesn't replace your vacuum integration, it builds on it: for **Eufy** that's [eufy-clean by jeppesens](https://github.com/jeppesens/eufy-clean); for **Roborock**, Home Assistant's built-in Roborock integration; for **Dreame**, [dreame-vacuum by Tasshack](https://github.com/Tasshack/dreame-vacuum); for **Ecovacs Deebot**, Home Assistant's built-in [Ecovacs](https://www.home-assistant.io/integrations/ecovacs/) integration. Vacuum Agent consumes whatever they already expose and adds everything the stock integrations don't.
 
 ---
 
@@ -38,6 +38,7 @@ Put your robot's live map on the dashboard, then actually work from it:
 
 - **Room-level control** — select individual rooms by name and send targeted clean jobs, rather than cleaning the whole floor.
 - **Queue management** — build, inspect, and reorder a cleaning queue before the job starts.
+- **Scheduling and presence** — start a saved run profile on a weekly schedule, clean when everyone leaves, pause or dock when someone arrives, and keep occupied rooms out of a clean. See [Scheduling and presence](docs/advanced/10-scheduling-and-presence.md).
 - **Run profiles and room profiles** — save vacuum settings (suction, mop, passes) per-room or as named run profiles you trigger from the UI or an automation.
 - **Room rules** — attach per-room rules (e.g. mop-only, skip when occupied) that apply automatically when a job is built, driven by any Home Assistant entity.
 - **Learning system and ETA** — records how long each room actually takes and uses that to estimate completion; estimates improve with every run. Cleans you start from the **vendor app** are captured and folded into learning too.
@@ -114,6 +115,21 @@ So are the maintenance guides — the ordered care steps and warnings for each p
 The Roborock adapter (tested on the **S6**) brings the stock integration up to parity with Eufy: the same per-room **rendered map**, **floor textures**, tap-to-queue, **draggable room-name labels**, and **draw-a-zone** — plus native per-room live rollover and per-room fan speed. Where a brand doesn't expose a fan-speed select entity, suction is still settable right in the zone/clean panel.
 
 **Wash docks** surface their two consumables — `Dock Cleaning Brush` and `Dock Strainer`. They live on the dock, which Roborock exposes as a *second device*, so they were previously invisible. Whether a dock can wash, dry or empty is read from the dock itself rather than guessed, and a bare charger produces no rows and no buttons.
+
+## Also on Ecovacs Deebot
+
+Ecovacs arrives through Home Assistant's **built-in** [Ecovacs integration](https://www.home-assistant.io/integrations/ecovacs/) (the `ecovacs` domain, powered by `deebot-client`) — no custom component needed. Set up your Deebot there, let it save a map, then add the `vacuum.*` entity here.
+
+**What you get:** named-room cleaning (sent as a `spot_area` clean), the room list and active map, battery, run history and learning, maintenance countdowns for the main brush, side brush and filter (with their reset buttons), and wash / dry / empty buttons for models with a station.
+
+**What works differently, because the integration exposes less:**
+
+- **Suction, water and mop mode are whole-robot settings**, not per-room. Vacuum Agent applies the setting for the batch of rooms you send (strongest suction wins; a batch that contains any vacuum-only room runs vacuum-only rather than risk mopping it).
+- **Passes are one number for the whole clean** (the strongest request across the selected rooms).
+- **Enable the *Work mode* select** (`select.<name>_work_mode`) in Home Assistant if your model mops — the integration ships it disabled, and without it Vacuum Agent cannot switch between vacuum and mop for you.
+- **There is no live position or current-room signal**, so the live robot dot, per-room timing inside a run and zone / go-to are not offered. A run is recorded as finished when the robot docks, so a mid-run recharge can end the record early.
+
+> This adapter was written from the Home Assistant integration's source rather than against a physical Deebot, so treat it as **new**. [Open an issue](https://github.com/kingchddg901/Vacuum_Agent/issues) with your model and what worked or didn't.
 
 ## Also on Dreame
 
@@ -205,6 +221,7 @@ Wire the vacuum into the rest of your home. Vacuum Agent fires `eufy_vacuum_job_
 | Roborock | Other models | Untested — may work, not supported |
 | Dreame | L10s Ultra Gen2 | Tested — Dreame adapter reference |
 | Dreame | Other models | Untested — may work, not supported |
+| Ecovacs | Deebot (any model with a saved map) | **New, not yet verified on hardware** — built from the Home Assistant core integration's source |
 
 Each brand's adapter was built and validated against one **reference model** — the **Eufy X10 Pro Omni**, the **Roborock S6** and the **Dreame L10s Ultra Gen2**. Those are the devices the adapter's behavior is tested against; other models of the same brand reuse that adapter and frequently work, but aren't individually verified.
 
@@ -404,6 +421,7 @@ Full docs live at **[kingchddg901.github.io/Vacuum_Agent/docs](https://kingchddg
 - [Services reference](https://kingchddg901.github.io/Vacuum_Agent/docs/advanced/03-services/) · [Automation examples](https://kingchddg901.github.io/Vacuum_Agent/docs/advanced/04-automation-examples/)
 - [Map configuration](https://kingchddg901.github.io/Vacuum_Agent/docs/advanced/08-map-configuration/) — enable the optional interactive room map
 - [Battery health (advanced)](https://kingchddg901.github.io/Vacuum_Agent/docs/advanced/09-battery-health/) — the math, zone definitions, mid-job recharge significance, and automation examples
+- [Scheduling and presence](https://kingchddg901.github.io/Vacuum_Agent/docs/advanced/10-scheduling-and-presence/) — schedules, leave/arrive rules, quiet rooms, services and the event
 
 **Contributing & internals**
 
