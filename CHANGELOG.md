@@ -8,6 +8,27 @@ Releases before 0.9.10 are recorded as
 [GitHub tags/releases](https://github.com/kingchddg901/Vacuum_Agent/releases)
 only.
 
+## [Unreleased]
+
+### Added
+
+- **Scheduling and presence.** Weekly schedules that start a saved run profile, with a
+  per-schedule when-someone-is-home policy (run / skip / defer to when everyone leaves);
+  presence rules to clean when everyone leaves, pause or dock when someone arrives, and
+  per-room quiet rules driven by occupancy sensors. New Schedules and Presence panels in the
+  Rooms view, five services (`get_schedules`, `save_schedule`, `delete_schedule`,
+  `run_schedule_now`, `set_presence_settings`) and an `eufy_vacuum_schedule_action` event.
+  Translated into all 17 shipped languages. See `docs/advanced/10-scheduling-and-presence.md`.
+- **Ecovacs Deebot adapter** (`adapters/ecovacs/`), built on Home Assistant's core
+  `ecovacs` integration: room cleaning via `spot_area`, room discovery from the vacuum's
+  `rooms` attribute, global suction / water / work-mode pre-calls, maintenance
+  countdowns with reset buttons, and station (wash / dry / empty) actions. Registered in
+  `BRAND_REGISTRARS`, the contract suite and the vocabulary catalogs. Not yet verified on
+  hardware.
+- **`name_id_mapping` room-list shape** (`discovery.room_list_shape`): a `{room_name: id | [ids]}`
+  attribute for one map, flattened by `rooms/source_refresh.py::normalize_room_attribute`. Every
+  existing shape is returned untouched.
+
 ## [2.7.1] - 2026-11-16
 
 **The cards you add to a dashboard are now yours to style.** A **Dashboard Cards** group in

@@ -177,6 +177,13 @@ SERVICE_RENAME_RUN_PROFILE = "rename_run_profile"
 SERVICE_DELETE_RUN_PROFILE = "delete_run_profile"
 SERVICE_START_RUN_PROFILE = "start_run_profile"
 
+# Scheduling + presence
+SERVICE_GET_SCHEDULES = "get_schedules"
+SERVICE_SAVE_SCHEDULE = "save_schedule"
+SERVICE_DELETE_SCHEDULE = "delete_schedule"
+SERVICE_RUN_SCHEDULE_NOW = "run_schedule_now"
+SERVICE_SET_PRESENCE_SETTINGS = "set_presence_settings"
+
 # Capability service
 SERVICE_GET_VACUUM_CAPABILITIES = "get_vacuum_capabilities"
 
@@ -343,6 +350,8 @@ DATA_RUNTIME = "runtime"
 DATA_LEARNING = "learning"
 
 DATA_BATTERY = "battery"
+#: The scheduling + presence engine (scheduling/manager.py).
+DATA_SCHEDULER = "scheduler"
 
 #: ErrorTracker instance — captures upstream error_message + vacuum.state
 #: transitions, latches them as active_run / last_device / recent_errors,
@@ -365,6 +374,12 @@ EVENT_JOB_FINISHED       = f"{DOMAIN}_job_finished"
 EVENT_ROOM_STARTED       = f"{DOMAIN}_room_started"
 EVENT_ROOM_FINISHED      = f"{DOMAIN}_room_finished"
 EVENT_PATH_BLOCKED       = f"{DOMAIN}_path_blocked"
+
+# Fired when the scheduler or a presence rule tries to start, skip, defer or interrupt a
+# run on its own. Payload: vacuum_entity_id, source ("schedule" | "presence_leave" |
+# "presence_deferred" | "manual"), action ("started" | "skipped" | "deferred" | "paused" |
+# "docked"), reason, schedule_id, profile_id, map_id.
+EVENT_SCHEDULE_ACTION    = f"{DOMAIN}_schedule_action"
 
 # Fired when an app-started (external) run finishes and is captured as a PENDING
 # record under learning/<slug>/external_jobs/. The review card subscribes and

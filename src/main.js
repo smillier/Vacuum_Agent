@@ -75,6 +75,7 @@ class EufyVacuumCommandCenter extends HTMLElement {
     this._metricsTimer = null;
     this._learningHistoryTimer = null;
     this._runProfilesTimer = null;
+    this._schedulesTimer = null;
     this._savedZonesTimer = null;
     this._incompleteRunLogTimer = null;
     this._incompleteRunLogLoaded = false;
@@ -937,6 +938,7 @@ class EufyVacuumCommandCenter extends HTMLElement {
     this._scheduleMetricsRefresh();
     this._scheduleLearningHistoryRefresh();
     this._scheduleRunProfilesRefresh();
+    this._scheduleSchedulesRefresh();
     this._scheduleSavedZonesRefresh();
     this._scheduleIncompleteRunLogRefresh();
     this._scheduleTroubleRoomsLogRefresh();
@@ -1077,6 +1079,7 @@ class EufyVacuumCommandCenter extends HTMLElement {
     }
     if (view === VIEWS.ROOMS) {
       this._scheduleRunProfilesRefresh();
+      this._scheduleSchedulesRefresh();
       this._scheduleSavedZonesRefresh();
     }
     if (view === VIEWS.SETUP) {
@@ -1422,6 +1425,37 @@ class EufyVacuumCommandCenter extends HTMLElement {
     this._runProfilesTimer = setTimeout(() => {
       this.refreshRunProfiles();
     }, 450);
+  }
+
+  /**
+   * Fetch schedules + presence. A FAILED fetch (null) leaves the last known overview alone rather than asserting
+   * "no schedules".
+   */
+  async refreshSchedules() {
+    if (!this._state || !this._actions) return null;
+    if (this._view !== VIEWS.ROOMS) return null;
+
+    const vacuumEntityId = this._state.vacuumEntityId();
+    if (!vacuumEntityId) return null;
+
+    const payload = await this._actions.getSchedules({
+      vacuum_entity_id: vacuumEntityId,
+    });
+    if (!payload) return null;
+
+    this._state.setSchedulesOverview?.(payload);
+    this._scheduleRender();
+    return payload;
+  }
+
+  _scheduleSchedulesRefresh() {
+    if (!this._state || !this._actions) return;
+    if (this._view !== VIEWS.ROOMS) return;
+
+    clearTimeout(this._schedulesTimer);
+    this._schedulesTimer = setTimeout(() => {
+      this.refreshSchedules();
+    }, 500);
   }
 
   async refreshSavedZones() {
@@ -2477,6 +2511,7 @@ class EufyVacuumCommandCenter extends HTMLElement {
     clearTimeout(this._pauseTimeoutSettingsTimer);
     clearTimeout(this._metricsTimer);
     clearTimeout(this._learningHistoryTimer);
+    clearTimeout(this._schedulesTimer);
     clearTimeout(this._runProfilesTimer);
     clearTimeout(this._savedZonesTimer);
     clearTimeout(this._incompleteRunLogTimer);

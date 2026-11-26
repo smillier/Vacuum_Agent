@@ -235,6 +235,12 @@ export function applyRoomsRenderers(proto) {
             ${typeof this.renderPauseTimeoutPanel === "function"
               ? this.renderPauseTimeoutPanel(state)
               : ""}
+            ${typeof this.renderSchedulesPanel === "function"
+              ? this.renderSchedulesPanel(state)
+              : ""}
+            ${typeof this.renderPresencePanel === "function"
+              ? this.renderPresencePanel(state)
+              : ""}
             ${(state.isMapViewActive?.() && (state.canDrawZone?.() ?? false) && (state.zoneDrawMode?.() ?? false)
                && (state.zoneDrawPurpose?.() !== "save"))
               ? this._renderZonePanel(

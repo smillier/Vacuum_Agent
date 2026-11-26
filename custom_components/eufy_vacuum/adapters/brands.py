@@ -85,6 +85,8 @@ from .roborock.const import UPSTREAM_PLATFORMS as ROBOROCK_PLATFORMS
 from .roborock.dock import load_dock_library
 from .dreame.adapter import register_dreame_adapter_for_vacuum
 from .dreame.const import UPSTREAM_PLATFORMS as DREAME_PLATFORMS
+from .ecovacs.adapter import register_ecovacs_adapter_for_vacuum
+from .ecovacs.const import UPSTREAM_PLATFORMS as ECOVACS_PLATFORMS
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -165,6 +167,14 @@ BRAND_REGISTRARS: tuple[BrandRegistrar, ...] = (
         brand_id="dreame",
         register=register_dreame_adapter_for_vacuum,
         platforms=DREAME_PLATFORMS,
+    ),
+    # THE FOURTH BRAND: Ecovacs Deebot, via the HA CORE ``ecovacs`` integration
+    # (deebot-client). Adapter authored from the upstream source, not a probed device — see
+    # ``adapters/ecovacs/adapter.py`` for the ``# VERIFY`` items that need hardware.
+    BrandRegistrar(
+        brand_id="ecovacs",
+        register=register_ecovacs_adapter_for_vacuum,
+        platforms=ECOVACS_PLATFORMS,
     ),
 )
 
