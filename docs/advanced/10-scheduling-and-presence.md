@@ -50,15 +50,15 @@ timer and an in-progress occurrence are in memory by design.
 
 ## Services
 
-Service names are generic; the `eufy_vacuum.` prefix is only the integration domain Home Assistant files every service of this integration under.
+These are ordinary Home Assistant actions: find them in **Developer Tools → Actions** by name. They are listed under the same integration as the rest of Vacuum Agent's services.
 
 | Service | What it does |
 |---|---|
-| `eufy_vacuum.get_schedules` | Schedules (with next run), presence settings and live presence state |
-| `eufy_vacuum.save_schedule` | Create a schedule, or edit one by passing `schedule_id` |
-| `eufy_vacuum.delete_schedule` | Remove a schedule |
-| `eufy_vacuum.run_schedule_now` | Start a schedule immediately, ignoring its time and when-home policy |
-| `eufy_vacuum.set_presence_settings` | Replace the vacuum's presence settings |
+| `get_schedules` | Schedules (with next run), presence settings and live presence state |
+| `save_schedule` | Create a schedule, or edit one by passing `schedule_id` |
+| `delete_schedule` | Remove a schedule |
+| `run_schedule_now` | Start a schedule immediately, ignoring its time and when-home policy |
+| `set_presence_settings` | Replace the vacuum's presence settings |
 
 ## Event
 
