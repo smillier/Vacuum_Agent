@@ -379,7 +379,8 @@ EVENT_PATH_BLOCKED       = f"{DOMAIN}_path_blocked"
 # run on its own. Payload: vacuum_entity_id, source ("schedule" | "presence_leave" |
 # "presence_deferred" | "manual"), action ("started" | "skipped" | "deferred" | "paused" |
 # "docked"), reason, schedule_id, profile_id, map_id.
-EVENT_SCHEDULE_ACTION    = f"{DOMAIN}_schedule_action"
+# Deliberately brand-neutral (not f"{DOMAIN}_..."): this event is generic across vacuum brands.
+EVENT_SCHEDULE_ACTION    = "vacuum_agent_schedule_action"
 
 # Fired when an app-started (external) run finishes and is captured as a PENDING
 # record under learning/<slug>/external_jobs/. The review card subscribes and

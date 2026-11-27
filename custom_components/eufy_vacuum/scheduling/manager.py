@@ -345,7 +345,7 @@ class ScheduleManager:
             await self._save()
         except Exception:  # pragma: no cover - never let a listener task raise
             _LOGGER.exception(
-                "eufy_vacuum: arrival action %r failed for %s", action, vacuum_entity_id
+                "scheduler: arrival action %r failed for %s", action, vacuum_entity_id
             )
 
     async def _on_everyone_left(self, vacuum_entity_id: str) -> None:
@@ -461,7 +461,7 @@ class ScheduleManager:
                 )
         except Exception as err:  # noqa: BLE001 - an unattended start must report, not raise
             _LOGGER.exception(
-                "eufy_vacuum: scheduled start failed for %s (%s)", vacuum_entity_id, profile_id
+                "scheduler: scheduled start failed for %s (%s)", vacuum_entity_id, profile_id
             )
             return self._skipped(vacuum_entity_id, source, f"error: {err}", resolved_map, extra)
 

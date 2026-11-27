@@ -17,7 +17,7 @@ only.
   presence rules to clean when everyone leaves, pause or dock when someone arrives, and
   per-room quiet rules driven by occupancy sensors. New Schedules and Presence panels in the
   Rooms view, five services (`get_schedules`, `save_schedule`, `delete_schedule`,
-  `run_schedule_now`, `set_presence_settings`) and an `eufy_vacuum_schedule_action` event.
+  `run_schedule_now`, `set_presence_settings`) and a `vacuum_agent_schedule_action` event.
   Translated into all 17 shipped languages. See `docs/advanced/10-scheduling-and-presence.md`.
 - **Ecovacs Deebot adapter** (`adapters/ecovacs/`), built on Home Assistant's core
   `ecovacs` integration: room cleaning via `spot_area`, room discovery from the vacuum's
