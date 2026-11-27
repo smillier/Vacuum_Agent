@@ -50,6 +50,8 @@ timer and an in-progress occurrence are in memory by design.
 
 ## Services
 
+Service names are generic; the `eufy_vacuum.` prefix is only the integration domain Home Assistant files every service of this integration under.
+
 | Service | What it does |
 |---|---|
 | `eufy_vacuum.get_schedules` | Schedules (with next run), presence settings and live presence state |
@@ -60,7 +62,7 @@ timer and an in-progress occurrence are in memory by design.
 
 ## Event
 
-Every automatic start, skip, defer, pause or dock fires `eufy_vacuum_schedule_action` with
+Every automatic start, skip, defer, pause or dock fires `vacuum_agent_schedule_action` with
 `vacuum_entity_id`, `source` (`schedule`, `presence_deferred`, `presence_leave`, `manual`),
 `action` (`started`, `skipped`, `deferred`, `paused`, `docked`), `reason`, `schedule_id`,
 `profile_id` and `map_id` — see the generated [event reference](../dev/reference/EVENTS.md).
@@ -70,7 +72,7 @@ automation:
   - alias: Tell me when the robot could not start
     trigger:
       - platform: event
-        event_type: eufy_vacuum_schedule_action
+        event_type: vacuum_agent_schedule_action
         event_data:
           action: skipped
     action:

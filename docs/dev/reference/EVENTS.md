@@ -26,9 +26,9 @@ Listen with the `event` trigger platform; every payload is a plain dict.
 | [`eufy_vacuum_room_skipped`](#eufy_vacuum_room_skipped) | `EVENT_ROOM_SKIPPED` | 1 | 6 | carries state |
 | [`eufy_vacuum_room_started`](#eufy_vacuum_room_started) | `EVENT_ROOM_STARTED` | 3 | 8 | carries state |
 | [`eufy_vacuum_run_incomplete`](#eufy_vacuum_run_incomplete) | `EVENT_RUN_INCOMPLETE` | 5 | 5 | carries state |
-| [`eufy_vacuum_schedule_action`](#eufy_vacuum_schedule_action) | `EVENT_SCHEDULE_ACTION` | 1 | 7 | carries state |
 | [`eufy_vacuum_stall_captured`](#eufy_vacuum_stall_captured) | `EVENT_STALL_CAPTURED` | 1 | 6 | carries state |
 | [`eufy_vacuum_stall_detected`](#eufy_vacuum_stall_detected) | `EVENT_STALL_DETECTED` | 3 | 14 | carries state |
+| [`vacuum_agent_schedule_action`](#vacuum_agent_schedule_action) | `EVENT_SCHEDULE_ACTION` | 1 | 7 | carries state |
 
 An `EVENT_*` constant that nothing fires is listed here rather than above — the name exists, the event does not:
 
@@ -286,30 +286,6 @@ Where a key lists more than one expression, the fire sites build it differently.
 | `custom_components/eufy_vacuum/listeners/pause_timeout.py::_reap_one_slot` | local `run_incomplete`: builder `run_incomplete_event_data()` | `isinstance(stranded_report, dict)` ⟶ `bool(result.get('finalized'))` ⟶ `run_incomplete is not None` |
 | `custom_components/eufy_vacuum/services/job_control.py::_handle_cancel_active_job` | local `run_incomplete`: builder `run_incomplete_event_payload()` | `payload.get('cancelled')` ⟶ `run_incomplete is not None` |
 
-## eufy_vacuum_schedule_action
-
-Constant: `EVENT_SCHEDULE_ACTION` — `custom_components/eufy_vacuum/const.py::EVENT_SCHEDULE_ACTION`, f-string `f'{DOMAIN}_schedule_action'`
-
-Fired from 1 call site(s) in 1 module(s): `custom_components/eufy_vacuum/scheduling/manager.py`
-
-### Payload
-
-| Key | Present | Value expression |
-|---|---|---|
-| `action` | every site | `action` |
-| `map_id` | every site | `map_id` |
-| `profile_id` | every site | `profile_id` |
-| `reason` | every site | `reason` |
-| `schedule_id` | every site | `schedule_id` |
-| `source` | every site | `source` |
-| `vacuum_entity_id` | every site | `vacuum_entity_id` |
-
-### Fire sites
-
-| Location | Payload built by | Nearest guards |
-|---|---|---|
-| `custom_components/eufy_vacuum/scheduling/manager.py::ScheduleManager._fire_event` | dict literal at the call site | — |
-
 ## eufy_vacuum_stall_captured
 
 Constant: `EVENT_STALL_CAPTURED` — `custom_components/eufy_vacuum/listeners/stall_capture.py::EVENT_STALL_CAPTURED`, f-string `f'{DOMAIN}_stall_captured'`
@@ -376,6 +352,30 @@ These keys are not written at the fire site. The firing helper extends its paylo
 | `custom_components/eufy_vacuum/core/manager.py::EufyVacuumManager._fire_stuck_event` | local `payload`: dict literal; extended by the caller via `detail=` | — |
 | `custom_components/eufy_vacuum/jobs/active_job.py::ActiveJobTracker.detect_run_anomalies` | dict literal at the call site | `_stall_threshold > 0 and current_room_elapsed_minutes >= _stall_threshold * _STALL_RATIO` ⟶ `emit` ⟶ `current_room_id not in _notified` |
 | `custom_components/eufy_vacuum/services/stall_capture.py::_dev_inject_stall` | local `payload`: dict literal | — |
+
+## vacuum_agent_schedule_action
+
+Constant: `EVENT_SCHEDULE_ACTION` — `custom_components/eufy_vacuum/const.py::EVENT_SCHEDULE_ACTION`, string literal `'vacuum_agent_schedule_action'`
+
+Fired from 1 call site(s) in 1 module(s): `custom_components/eufy_vacuum/scheduling/manager.py`
+
+### Payload
+
+| Key | Present | Value expression |
+|---|---|---|
+| `action` | every site | `action` |
+| `map_id` | every site | `map_id` |
+| `profile_id` | every site | `profile_id` |
+| `reason` | every site | `reason` |
+| `schedule_id` | every site | `schedule_id` |
+| `source` | every site | `source` |
+| `vacuum_entity_id` | every site | `vacuum_entity_id` |
+
+### Fire sites
+
+| Location | Payload built by | Nearest guards |
+|---|---|---|
+| `custom_components/eufy_vacuum/scheduling/manager.py::ScheduleManager._fire_event` | dict literal at the call site | — |
 
 > **Line numbers here are current by construction.** They are regenerated from
 > source and CI fails when this file disagrees with the generator, which is the
