@@ -10,7 +10,7 @@ only.
 
 ## [Unreleased]
 
-## [2.7.2-beta.1] - 2026-11-28
+## [2.7.2-beta.2] - 2026-11-28
 
 Pre-release: Ecovacs Deebot adapter.
 
