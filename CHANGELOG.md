@@ -12,17 +12,10 @@ only.
 
 ## [2.7.2-beta.1] - 2026-11-28
 
-Pre-release: Ecovacs Deebot adapter, scheduling and presence (see Unreleased notes below).
+Pre-release: Ecovacs Deebot adapter.
 
 ### Added
 
-- **Scheduling and presence.** Weekly schedules that start a saved run profile, with a
-  per-schedule when-someone-is-home policy (run / skip / defer to when everyone leaves);
-  presence rules to clean when everyone leaves, pause or dock when someone arrives, and
-  per-room quiet rules driven by occupancy sensors. New Schedules and Presence panels in the
-  Rooms view, five services (`get_schedules`, `save_schedule`, `delete_schedule`,
-  `run_schedule_now`, `set_presence_settings`) and a `vacuum_agent_schedule_action` event.
-  Translated into all 17 shipped languages. See `docs/advanced/10-scheduling-and-presence.md`.
 - **Ecovacs Deebot adapter** (`adapters/ecovacs/`), built on Home Assistant's core
   `ecovacs` integration: room cleaning via `spot_area`, room discovery from the vacuum's
   `rooms` attribute, global suction / water / work-mode pre-calls, maintenance

@@ -57,7 +57,6 @@ from .const import (
     DATA_ERROR_TRACKER,
     DATA_LEARNING,
     DATA_RUNTIME,
-    DATA_SCHEDULER,
     DOMAIN,
     ENTITY_OVERRIDES_KEY,
 )
@@ -86,7 +85,6 @@ from .rooms.vocabulary_migration import (
 )
 from .battery.manager import BatteryHealthManager
 from .core.error_tracker import ErrorTracker
-from .scheduling.manager import ScheduleManager
 from .core.manager import EufyVacuumManager
 from .learning.history_store import LearningHistoryStore
 from .learning.manager import LearningManager
@@ -1017,18 +1015,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         error_tracker.start(manager.get_known_vacuum_ids())
         hass.data[DOMAIN][DATA_ERROR_TRACKER] = error_tracker
 
-        # Scheduling + presence: the minute clock and the person listeners. Pushed BEFORE
-        # start() like its siblings so a partial failure still unwinds whatever armed.
-        scheduler = ScheduleManager(hass, runtime_manager=manager)
-
-        def _undo_scheduler() -> None:
-            hass.data.get(DOMAIN, {}).pop(DATA_SCHEDULER, None)
-            scheduler.stop()
-
-        _unwind_stack.append(_undo_scheduler)
-        hass.data[DOMAIN][DATA_SCHEDULER] = scheduler
-        scheduler.start()
-
         async def _handle_rebaseline(call: ServiceCall) -> None:
             vacuum_entity_id = call.data["vacuum_entity_id"]
             bm = hass.data.get(DOMAIN, {}).get(DATA_BATTERY)
@@ -1371,12 +1357,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 error_tracker.stop()
             except Exception:  # pragma: no cover
                 _LOGGER.exception("Failed to stop error tracker")
-        scheduler = domain_data.pop(DATA_SCHEDULER, None)
-        if scheduler is not None:
-            try:
-                scheduler.stop()
-            except Exception:  # pragma: no cover
-                _LOGGER.exception("Failed to stop scheduler")
         # Unregister adapter configs on unload. Wrapped in try/finally so
         # the coordinator shutdown ALWAYS runs even if individual
         # unregister calls raise — otherwise stale module-level pointer

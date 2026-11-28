@@ -9,7 +9,7 @@
 
 > Generated reference — the facts. The *reasons* live in the prose docs: [Events](../../advanced/02-events.md) for automation authors, and [How a Run Ends](../06-run-end.md) for why the end-of-run events exist and which paths fire them. Regenerate with `python scripts/gen_event_docs.py`; CI fails if this file is not what the generator emits.
 
-The integration fires **12 events** on `hass.bus` from **27 call sites**, carrying **99 payload key slots** (58 distinct key names). Every event name below was resolved from the constant that names it, not read as a literal.
+The integration fires **11 events** on `hass.bus` from **26 call sites**, carrying **92 payload key slots** (54 distinct key names). Every event name below was resolved from the constant that names it, not read as a literal.
 
 Listen with the `event` trigger platform; every payload is a plain dict.
 
@@ -28,7 +28,6 @@ Listen with the `event` trigger platform; every payload is a plain dict.
 | [`eufy_vacuum_run_incomplete`](#eufy_vacuum_run_incomplete) | `EVENT_RUN_INCOMPLETE` | 5 | 5 | carries state |
 | [`eufy_vacuum_stall_captured`](#eufy_vacuum_stall_captured) | `EVENT_STALL_CAPTURED` | 1 | 6 | carries state |
 | [`eufy_vacuum_stall_detected`](#eufy_vacuum_stall_detected) | `EVENT_STALL_DETECTED` | 3 | 14 | carries state |
-| [`vacuum_agent_schedule_action`](#vacuum_agent_schedule_action) | `EVENT_SCHEDULE_ACTION` | 1 | 7 | carries state |
 
 An `EVENT_*` constant that nothing fires is listed here rather than above — the name exists, the event does not:
 
@@ -353,30 +352,6 @@ These keys are not written at the fire site. The firing helper extends its paylo
 | `custom_components/eufy_vacuum/jobs/active_job.py::ActiveJobTracker.detect_run_anomalies` | dict literal at the call site | `_stall_threshold > 0 and current_room_elapsed_minutes >= _stall_threshold * _STALL_RATIO` ⟶ `emit` ⟶ `current_room_id not in _notified` |
 | `custom_components/eufy_vacuum/services/stall_capture.py::_dev_inject_stall` | local `payload`: dict literal | — |
 
-## vacuum_agent_schedule_action
-
-Constant: `EVENT_SCHEDULE_ACTION` — `custom_components/eufy_vacuum/const.py::EVENT_SCHEDULE_ACTION`, string literal `'vacuum_agent_schedule_action'`
-
-Fired from 1 call site(s) in 1 module(s): `custom_components/eufy_vacuum/scheduling/manager.py`
-
-### Payload
-
-| Key | Present | Value expression |
-|---|---|---|
-| `action` | every site | `action` |
-| `map_id` | every site | `map_id` |
-| `profile_id` | every site | `profile_id` |
-| `reason` | every site | `reason` |
-| `schedule_id` | every site | `schedule_id` |
-| `source` | every site | `source` |
-| `vacuum_entity_id` | every site | `vacuum_entity_id` |
-
-### Fire sites
-
-| Location | Payload built by | Nearest guards |
-|---|---|---|
-| `custom_components/eufy_vacuum/scheduling/manager.py::ScheduleManager._fire_event` | dict literal at the call site | — |
-
 > **Line numbers here are current by construction.** They are regenerated from
 > source and CI fails when this file disagrees with the generator, which is the
 > only reason a reference is allowed to cite them at all — prose in this repo
@@ -395,7 +370,7 @@ with its count.
 | `builder-self-delegate` | 2 | get_runtime_path_block_report() delegate: `get_runtime_path_block_report` delegates to another definition of the same name — not followed a second time; the keys come from the sibling definition |
 | `firing-conditions-not-derived` | 1 | the `if` guards printed per site are the enclosing tests only — dedup ledgers, adapter capability gates and cross-tick state machines that decide whether a site is reached are not modelled |
 | `flow-insensitive-mutation` | 1 | in-place payload mutations are attributed by LINE ORDER, not control flow — a mutation in a branch not taken is still counted for any fire site textually below it |
-| `no-type-inference` | 1 | payload value TYPES are not inferred; the reference prints the value EXPRESSION for 99 key slots instead |
+| `no-type-inference` | 1 | payload value TYPES are not inferred; the reference prints the value EXPRESSION for 92 key slots instead |
 
 **`builder-self-delegate`** — 2 site(s):
 

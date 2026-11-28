@@ -38,7 +38,6 @@ Put your robot's live map on the dashboard, then actually work from it:
 
 - **Room-level control** — select individual rooms by name and send targeted clean jobs, rather than cleaning the whole floor.
 - **Queue management** — build, inspect, and reorder a cleaning queue before the job starts.
-- **Scheduling and presence** — start a saved run profile on a weekly schedule, clean when everyone leaves, pause or dock when someone arrives, and keep occupied rooms out of a clean. See [Scheduling and presence](docs/advanced/10-scheduling-and-presence.md).
 - **Run profiles and room profiles** — save vacuum settings (suction, mop, passes) per-room or as named run profiles you trigger from the UI or an automation.
 - **Room rules** — attach per-room rules (e.g. mop-only, skip when occupied) that apply automatically when a job is built, driven by any Home Assistant entity.
 - **Learning system and ETA** — records how long each room actually takes and uses that to estimate completion; estimates improve with every run. Cleans you start from the **vendor app** are captured and folded into learning too.
@@ -421,7 +420,6 @@ Full docs live at **[kingchddg901.github.io/Vacuum_Agent/docs](https://kingchddg
 - [Services reference](https://kingchddg901.github.io/Vacuum_Agent/docs/advanced/03-services/) · [Automation examples](https://kingchddg901.github.io/Vacuum_Agent/docs/advanced/04-automation-examples/)
 - [Map configuration](https://kingchddg901.github.io/Vacuum_Agent/docs/advanced/08-map-configuration/) — enable the optional interactive room map
 - [Battery health (advanced)](https://kingchddg901.github.io/Vacuum_Agent/docs/advanced/09-battery-health/) — the math, zone definitions, mid-job recharge significance, and automation examples
-- [Scheduling and presence](https://kingchddg901.github.io/Vacuum_Agent/docs/advanced/10-scheduling-and-presence/) — schedules, leave/arrive rules, quiet rooms, services and the event
 
 **Contributing & internals**
 
