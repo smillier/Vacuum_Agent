@@ -10,6 +10,10 @@ only.
 
 ## [Unreleased]
 
+## [2.7.2-beta.1] - 2026-11-28
+
+Pre-release: Ecovacs Deebot adapter, scheduling and presence (see Unreleased notes below).
+
 ### Added
 
 - **Scheduling and presence.** Weekly schedules that start a saved run profile, with a
